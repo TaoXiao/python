@@ -1,1 +1,1 @@
-This proj is a Python tutorial exampl
+This proj is a Python tutorial example
