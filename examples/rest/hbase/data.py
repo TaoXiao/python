@@ -17,7 +17,7 @@ rowkey可以是精确匹配，也可以是带*的模糊匹配
 (*只能放在rowkey的最后一个字符)
 """
 def queryOneRecord(rowkey, table):
-    rowkey64 = base64.b32encode(rowkey)
+    rowkey64 = base64.b64encode(rowkey)
 
     url = baseurl + "/" + table + "/" + rowkey
     print "url = " + url
@@ -69,6 +69,12 @@ def queryOneRecord(rowkey, table):
     print "results = " +  json.dumps(results, sort_keys=True, indent=4)
 
     print "\n经过解析、转码后的查询结果为"
+    """
+    经过解析、转码后的查询结果为
+    rowkey = row-1
+    Column = F1:C1	 | value = row1-F1-C1
+    Column = F1:C2	 | value = row1-F1-C2
+    """
 
     for row in results["Row"]:
         print "rowkey = " + base64.b64decode(row['key'])
@@ -87,7 +93,7 @@ def queryOneRecord(rowkey, table):
 """
 def insertOneRecord(rowkey, table, family, qualifier, value):
     rows = []
-    jsonOut = {"Row" : rows }
+    jsonOut = {"Row" : rows}
 
     """ We have to use an `OrderedDict` instead of a normal dict
         because we have to maintain the order of the keys in the dictionary.
