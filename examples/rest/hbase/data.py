@@ -3,10 +3,53 @@
 import requests
 import base64
 import json
+import struct
 from collections import OrderedDict
+
+
+
+
+# 将int转为二进制字节数组后再转为base64编码的字符串
+def b64encodeInt(n):
+    data = struct.pack("i", n)
+    return base64.b64encode(data)
+
+
+
+# 转换float类型的数据
+def b64encodeFloat(x):
+    data = struct.pack("f", x)
+    return base64.b64encode(data)
+
+
+
+
+# 转换double类型的数据
+def b64encodeDouble(x):
+    data = struct.pack("d", x)
+    return base64.b64encode(data)
+
+
+def b64encode(data):
+    if type(data) == str:      # data为str类型
+        return base64.b64encode(data)
+    elif type(data) == int:    # data为int类型
+        return b64encodeInt(data)
+    elif type(data) == float:   # data为float
+        return b64encodeFloat(data)
+
+
+
+
+"""
+查询HBase中的表数据
+插入数据
+删除数据
+"""
 
 baseurl='http://ecs5.njzd.com:20550'
 headers={'Accept':'application/json', "Content-Type" : "application/json"}
+
 
 
 
@@ -29,7 +72,7 @@ def queryOneRecord(rowkey, table):
     # response.content 是JSON形式的字符串
     results = json.loads(response.content)
 
-    """ json.dumps(results, sort_keys=True, indent=4)的结果
+    """ json.dumps(results, sort_keys=True, indent=4)输出的结果
     {
         "Row": [
             {
@@ -85,66 +128,61 @@ def queryOneRecord(rowkey, table):
             print "\t\tColumn = " + column + "\t | value = " + value
 
 
-
-
-
 """
-插入一条record
+从table中删除一列数据
 """
-def insertOneRecord(rowkey, table, family, qualifier, value):
-    rows = []
-    jsonOut = {"Row" : rows}
+def deleteOneColumn(rowkey, table, family, qualifier):
+    print '描述：从名为 "' + table + '" 的表中删除一列数据，其行列坐标为：("' + str(rowkey) + '", "' + family + ':' + qualifier + '")'
 
-    """ We have to use an `OrderedDict` instead of a normal dict
-        because we have to maintain the order of the keys in the dictionary.
-        This works around an issue in the REST daemon for JSON. The bug is that
-        the “key” entry must come before the “Cell” entry
-    """
-    cell = OrderedDict([
-        ("key", base64.b64encode(rowkey)),  # 这里是真正起作用的rowkey
-        ("Cell", [
-            {"column" : base64.b64encode(family + ":" + qualifier), "$" : base64.b64encode(value)}]
-        )
-    ])
+    url = baseurl + "/" + table + "/" + (rowkey if type(rowkey) == str else b64encode(rowkey) ) +  "/" + family + ":" + qualifier
 
-    rows.append(cell)
-
-    # URL里的rowkey是不起作用的
-    url = baseurl + "/" + table + "/" + "rowkey"
     print "url = " + url
-
-    payload = json.dumps(jsonOut, sort_keys=True, indent=4)
-    print "payload = " + payload
-
-    response = requests.post(url, data=payload, headers=headers)
-    print "status_code = " + str(response.status_code)
-
-
-
-
-
-
-"""
-从table中删除一条记录
-"""
-def deleteOneRecord(rowkey, table, family, qualifier):
-    url = baseurl + "/" + table + "/" + rowkey + "/" + family + ":" + qualifier
-    print "url = " + url
+    print "method = DELETE"
 
     response = requests.delete(url)
     print "status_code = " + str(response.status_code)
 
 
 
-# deleteOneRecord("row-1", "X", "F1", "C1")
 
 """
-insertOneRecord("row-1", "X", "F1", "C1", "row1-F1-C1")
-insertOneRecord("row-1", "X", "F1", "C2", "row1-F1-C2")
-insertOneRecord("row-2", "X", "F1", "C1", "row2-F1-C1")
-insertOneRecord("row-2", "X", "F1", "C3", "row2-F1-C3")
+插入新的record
+"""
+def insertOneColumn(rowkey, table, family, qualifier, value):
+    rows = []
+    jsonOutput = { "Row" : rows }
+
+    cell = OrderedDict([
+        ("key", b64encode(rowkey)),
+        ("Cell", [
+            { "column" : b64encode(family + ":" + qualifier), "$" : b64encode(value) }
+        ])
+    ])
+
+    rows.append(cell)
+
+    # URL里的rowkey不起作用
+    url = baseurl + "/" + table + "/" + str(rowkey)
+    print "url = " + url
+
+    payload = json.dumps(jsonOutput, sort_keys=True, indent=4)
+    print "payload = " + payload
+
+    response = requests.post(url, data=payload, headers={ "Content-Type": "application/json", "Accept" : "application/json" })
+
+    print "status_code = " + str(response.status_code)
+
+
+"""
+insertOneColumn("row-1", "X", "A", "a1", "110")
+insertOneColumn("row-1", "X", "B", "b1", "120")
+insertOneColumn("row-2", "X", "A", "a1", "210")
+insertOneColumn("row-2", "X", "C", "c1", "220")
+deleteOneColumn("row-1", "X", "A", "a1")
+insertOneColumn(100, "X", "C", "c1", 200)
 """
 
-#queryOneRecord("row*", "X")
+#insertOneColumn(100, "X", "C", "c1", "one hundred")
+deleteOneColumn(100, "X", "C", "c1")
 
-queryOneRecord("row-1", "X")
+

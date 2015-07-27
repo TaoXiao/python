@@ -51,4 +51,33 @@ type of `decodedA` is  <type 'str'>
 `decodedA`中的内容是 ['\xe4', '\xbd', '\xa0', '\xe5', '\xa5', '\xbd', '\xef', '\xbc', '\x8c', ' ', 'b', 'a', 's', 'e', '6', '4']
 """
 print "type of `decodedA` is ", type(decodedA)
-print "`decodedA`中的内容是", [b for b in decodedA]
+print "`decodedA`中的内容是", [b for b in decodedA], "\n\n"
+
+
+
+"""
+除了普通的编码之外，还有适用于URL的编码方式
+由于标准的Base64编码后可能出现字符+和/，在URL中就不能直接作为参数，所以又有一种"url safe"的base64编码，其实就是把字符+和/分别变成-和_：
+这种情况下，需要用`base64.urlsafe_b64encode`来代替`base64.b64encode`
+"""
+
+print base64.b64encode('i\xb7\x1d\xfb\xef\xff')         # 输出abcd++//
+print base64.urlsafe_b64encode('i\xb7\x1d\xfb\xef\xff') , "\n\n"# 输出abcd--__
+
+
+# 对其他类型（如int,float进行编码）
+"""
+print base64.b64encode(100) # 这是错误的，因为不能直接对INT进行base64编码
+会报错：TypeError: must be string or buffer, not int
+"""
+
+
+import struct
+
+# 将int转为二进制字节数组后再转为base64编码的字符串
+def b64encodeInt(n):
+    data = struct.pack("i", n)
+    return base64.b64encode(data)
+
+print b64encodeInt(100)
+
