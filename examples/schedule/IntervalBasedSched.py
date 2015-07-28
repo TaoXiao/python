@@ -87,19 +87,18 @@ class IntervalBasedSched:
 
 
     # 开始调度
-    def start(self, f, args):
+    def start(self, action, *args):
         while True:
             if 0 == self.waitingSeconds:
                 self.count += 1
-                f(args)
+                action(args)
                 # 辅助调试信息  print '第' + str(self.count) + '次运行'
             else:
                 time.sleep(self.waitingSeconds)
                 start = time.time()
                 self.count += 1
-                f(args)
+                action(args)    # action
                 # 辅助调试信息  print '第' + str(self.count) + '次运行'
-                time.sleep(2)
                 end = time.time()
 
                 # 从start到end共流逝了多少秒
@@ -116,13 +115,13 @@ class IntervalBasedSched:
 目标函数是F，传入的参数是Hi
 """
 
-def F(args):
-    print args
+def F(arg):
+    print "hello"
 
 
-sch = IntervalBasedSched(Clock(10,10,0), 3)
+sch = IntervalBasedSched(Clock(10,25,40), 3)
 
 
-sch.start(F, "Hi")
+sch.start(F)
 
 
