@@ -4,7 +4,7 @@
 # 『-*- coding:utf-8 *-*』表示本源文件的编码是UTF-8
 # u'xxx'则表示'xxx'用UTF-8编码
 print u'## 请出输入你想创建的文件名:'
-filename = raw_input()  # 这里即使用户键入的是中午也是可以的
+filename = raw_input()  # 这里即使用户键入的是中文也是可以的
 
 # 创建并打开要写的文件
 with open(filename, 'w') as f:
