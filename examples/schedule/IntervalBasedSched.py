@@ -119,7 +119,7 @@ def F(arg):
     print "hello"
 
 
-sch = IntervalBasedSched(Clock(10,25,40), 3)
+sch = IntervalBasedSched(Clock(9,56,0), 3)
 
 
 sch.start(F)
