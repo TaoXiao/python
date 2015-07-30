@@ -1,15 +1,22 @@
 # -*- encoding: utf-8 -*-
 __author__ = 'tao'
 
+'''
+在windows上安装paramiko要麻烦一些，参考
+1. http://linux5588.blog.51cto.com/65280/1275180
+2. http://www.cnblogs.com/zhuyp1015/archive/2012/07/17/2596495.html
+3. http://paramiko-www.readthedocs.org/en/latest/installing.html#pypm
+4. https://pypi.python.org/pypi/setuptools#downloads
+'''
 import paramiko
 
 
 
 """  用法
-    host = "ecs5.njzd.com"
+    host = "some.host.com"
     port = 22
-    user = "root"
-    passwd = "Root1234NJ"
+    user = "xxx"
+    passwd = "xxx"
 
     # 本地文件名
     localFilePath  = "/Users/tao/IdeaProjects/guizhou_food_security/bigdata/target/bigdata-1.0-SNAPSHOT.jar"
@@ -38,8 +45,6 @@ class SftpClient:
     def close(self):
         self.sftp.close()
         self.transport.close()
-
-
 
 
 
