@@ -2,6 +2,11 @@
 __author__ = 'tao'
 
 '''
+使用SFTP的好处：
+1. SFTP是SSH的一部分（与传统的FTP没有任何关系），因此使用SFTP不需要传统的FTP Server
+2. 更安全
+
+
 在windows上安装paramiko要麻烦一些，参考
 1. http://linux5588.blog.51cto.com/65280/1275180
 2. http://www.cnblogs.com/zhuyp1015/archive/2012/07/17/2596495.html
