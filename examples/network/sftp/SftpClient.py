@@ -1,6 +1,8 @@
 # -*- encoding: utf-8 -*-
 __author__ = 'tao'
 
+import errno
+
 '''
 使用SFTP的好处：
 1. SFTP是SSH的一部分（与传统的FTP没有任何关系），因此使用SFTP不需要传统的FTP Server
@@ -43,10 +45,23 @@ class SftpClient:
         self.transport.connect(username=user, password=passwd)
         self.sftp = paramiko.SFTPClient.from_transport(self.transport)
 
+
     """ `paramiko` 不直接支持传输目录，需要自己实现 """
     def transfer(self, localPath, remotePath):
         self.sftp.put(localPath, remotePath)
 
+
+    """ 判断 某个文件/目录 是否存在 """
+    def exists(self, path):
+        try:
+            self.sftp.stat(path)
+        except IOError, e:
+            if e.errno == errno.ENOENT:
+                return False
+        else:
+            return True
+
+    """ 使用完了必须关闭SFTP连接 """
     def close(self):
         self.sftp.close()
         self.transport.close()
