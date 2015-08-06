@@ -130,11 +130,14 @@ def queryOneRecord(rowkey, table):
 
 """
 从table中删除一列数据
+1. 如果rowkey本身是string，那么就直接写成string的形式，例如"100"
+2. 如果rowkey本身是其他类型的（例如int），那么rowkey在HBase中实际保存的是byte array的形式，
+   那么在API中就要写成该数据的`二进制字符串`的形式(例如，对于int型的100，rowkey在API中就要写成 "d\x00\x00\x00" )
 """
 def deleteOneColumn(rowkey, table, family, qualifier):
     print '描述：从名为 "' + table + '" 的表中删除一列数据，其行列坐标为：("' + str(rowkey) + '", "' + family + ':' + qualifier + '")'
 
-    url = baseurl + "/" + table + "/" + (rowkey if type(rowkey) == str else b64encode(rowkey) ) +  "/" + family + ":" + qualifier
+    url = baseurl + "/" + table + "/" + rowkey +  "/" + family + ":" + qualifier
 
     print "url = " + url
     print "method = DELETE"
@@ -183,6 +186,6 @@ insertOneColumn(100, "X", "C", "c1", 200)
 """
 
 #insertOneColumn(100, "X", "C", "c1", "one hundred")
-deleteOneColumn(100, "X", "C", "c1")
+deleteOneColumn("d\x00\x00\x00", "X", "C", "c1")
 
 
