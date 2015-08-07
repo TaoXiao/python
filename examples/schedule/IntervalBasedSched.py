@@ -1,6 +1,20 @@
 # -*- encoding: utf-8 -*-
 
+"""
+用法示例：
+从9点56分0秒开始，每隔3秒执行一个函数
+目标函数是F，传入的参数是Hi
+def F():
+    print "hello"
+sch = IntervalBasedSched(Clock(9,56,0), 3)
+sch.start(F)
+"""
+
+
+
+
 import time
+
 
 
 """
@@ -83,45 +97,30 @@ class IntervalBasedSched:
         # 还要等多少秒可以开始第一次运行
         self.waitingSeconds = secondsUntilNow(basePoint)
         self.count = 0
-        print "离第一次运行还有" + str(self.waitingSeconds) + '秒'
+        print "Now wait for " + str(self.waitingSeconds) + ' seconds to run it the first time !'
 
 
     # 开始调度
+    # action可以带任意数量的参数
     def start(self, action, *args):
         while True:
             if 0 == self.waitingSeconds:
                 self.count += 1
-                action(args)
+                action(*args)
                 # 辅助调试信息  print '第' + str(self.count) + '次运行'
             else:
                 time.sleep(self.waitingSeconds)
                 start = time.time()
                 self.count += 1
-                action(args)    # action
+                action(*args)
                 # 辅助调试信息  print '第' + str(self.count) + '次运行'
                 end = time.time()
 
                 # 从start到end共流逝了多少秒
                 elapsed = int(end - start)
-                self.waitingSeconds = self.interval - elapsed
 
-
-
-
-
-"""
-用法示例：
-从9点56分0秒开始，每隔3秒执行一个函数
-目标函数是F，传入的参数是Hi
-"""
-
-def F(arg):
-    print "hello"
-
-
-sch = IntervalBasedSched(Clock(9,56,0), 3)
-
-
-sch.start(F)
-
-
+                # 需要处理 `action耗时超过interval` 的情况
+                if elapsed/self.interval == 0:
+                    self.waitingSeconds = self.interval - elapsed
+                else:
+                    self.waitingSeconds = (elapsed/self.interval + 1)*self.interval - elapsed
