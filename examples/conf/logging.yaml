@@ -1,0 +1,46 @@
+---
+version: 1
+
+disable_existing_loggers: False
+
+formatters:
+  simple:
+    format: "%(asctime)s %(levelname)s %(name)s : %(message)s"
+
+handlers:
+  console_handler:
+    class: logging.StreamHandler
+    formatter: simple
+    level: INFO
+    stream: ext://sys.stdout
+
+  error_console_handler:
+    class: logging.StreamHandler
+    formatter: simple
+    level: ERROR
+    stream: ext://sys.stderr
+
+  file_handler:
+    class: logging.handlers.RotatingFileHandler
+    level: WARN
+    formatter: simple
+    filename: warn.log
+    maxBytes: 1500*10
+    backupCount: 5
+    encoding: utf8
+
+
+loggers:
+  rotatingFileLogger:
+    handlers: [file_handler]
+    propagate: false
+
+  doubleLogger:
+    handlers: [error_console_handler,file_handler]
+    propagate: false
+
+
+
+root:
+  level: INFO
+  handlers: [console_handler]
