@@ -4,6 +4,14 @@ __author__ = 'tao'
 """通过YAML文件来配置log
 """
 
+"""
+注意：要使用logging module，必须升级python到2.7版本以上
+CentOS 6.5 自带Python 2.6.6，不能卸载，也不能升级
+要自己另外安装Python 2.7
+详见 [How To Set Up Python 2.7.6 and 3.3.3 on CentOS 6.4]
+(https://www.digitalocean.com/community/tutorials/how-to-set-up-python-2-7-6-and-3-3-3-on-centos-6-4)
+"""
+
 import os
 import logging.config
 import yaml
