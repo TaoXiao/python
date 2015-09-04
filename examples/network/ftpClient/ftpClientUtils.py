@@ -13,7 +13,14 @@ FTP默认的端口是21
 因此配置SFTP不需要传统的FTP服务器软件
 SFTP的默认端口是22
 
-
-如果不想安装FTP Server，那么可以直接利用SFTP来传文件
-这样，只要写一个SFTP Client即可
+主动模式：active mode
 """
+
+"""将FTP服务器上的文件下载到本地指定的路径
+"""
+def downloadFile(ftp, remotePath, localPath):
+    localfile = open(localPath, 'wb')
+    ftp.retrbinary('RETR ' + remotePath, localfile.write)
+    localfile.close()
+
+
