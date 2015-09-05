@@ -21,4 +21,7 @@ print ftp.getwelcome()
 # 列出该目录下的所有内容，以行的形式输出
 #ftp.retrlines('LIST')
 
-ftpClientUtils.downloadFile(ftp, "/0calibration/LH004.pdf", "/Users/tao/Downloads/ftp/LH004.pdf")
+# ftpClientUtils.downloadFile(ftp, "/0calibration/LH004.pdf", "/Users/tao/Downloads/ftp/LH004.pdf")
+
+print ftpClientUtils.checkFileExists(ftp, "/lims/ArchiveReport/general/FZ20137001.pdf")
+

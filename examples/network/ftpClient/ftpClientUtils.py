@@ -24,3 +24,13 @@ def downloadFile(ftp, remotePath, localPath):
     localfile.close()
 
 
+""" 测试一个指定的文件是否存在（不适合目录）
+"""
+def checkFileExists(ftp, path):
+    try:
+        size = ftp.size(path)
+        return True
+    except:
+        return False
+
+

@@ -2,6 +2,8 @@
 __author__ = 'tao'
 
 import errno
+import stat
+import os
 
 '''
 使用SFTP的好处：
@@ -46,9 +48,46 @@ class SftpClient:
         self.sftp = paramiko.SFTPClient.from_transport(self.transport)
 
 
-    """ `paramiko` 不直接支持传输目录，需要自己实现 """
-    def transfer(self, localPath, remotePath):
-        self.sftp.put(localPath, remotePath)
+    """ 传输文件
+    src 和 dest 都必须是文件名
+
+    不能实现目录的传输
+
+    传输方向：只能实现从本机向远程机器的文件分发
+    """
+    def transfer(self, src, dest):
+        self.sftp.put(src, dest)
+
+
+    """ 下载文件/目录
+    destPath必须是目录（且已经存在），srcPath可以是文件或者目录
+    传输方向：从远程机器下载文件到本地
+    """
+    def download(self, srcPath, destPath):
+        if not os.path.exists(destPath):
+            print "Dest path [" + srcPath + "] does NOT exist !"
+            return
+        if not os.path.isdir(destPath):
+            print "Dest path [" + destPath + "] is NOT directory !"
+            return
+        if not self.exists(srcPath):
+            print "Source path [" + srcPath + "] does NOT exist !"
+            return
+
+        if not self.isDirectory(srcPath):
+            self.sftp.get(srcPath, os.path.join(destPath, os.path.basename(srcPath)))
+        else:
+            # sftp.listdir(srcPath) 只会返回文件或者目录本身的名字，不会返回全路径名
+            for newSrcPath in [os.path.join(srcPath, path) for path in self.sftp.listdir(srcPath)]:
+                if self.isDirectory(newSrcPath):
+                    newDestPath = os.path.join(destPath, os.path.basename(newSrcPath))
+                    os.mkdir(newDestPath)
+                    self.download(newSrcPath, newDestPath)
+                else:
+                    self.download(newSrcPath, destPath)
+
+
+
 
 
     """ 判断 某个文件/目录 是否存在 """
@@ -60,6 +99,23 @@ class SftpClient:
                 return False
         else:
             return True
+
+
+    """ 判断是文件还是目录
+    返回True表示是目录
+    返回False表示是文件
+    """
+    def isDirectory(self, path):
+        lstat = self.sftp.lstat(path)
+        if stat.S_ISDIR(lstat.st_mode):
+            return True
+        else:
+            return False
+
+
+    def listDir(self, path):
+        return self.sftp.listdir(path)
+
 
     """ 使用完了必须关闭SFTP连接 """
     def close(self):
