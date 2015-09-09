@@ -1,9 +1,7 @@
 # -*- encoding: utf-8 -*-
 __author__ = 'tao'
 
-from ftplib import FTP
-import ftpClientUtils
-import os
+from ftpClient import FtpClient
 
 HOST = "fsnrec.com"
 USER = "xt"
@@ -11,9 +9,8 @@ PASS = "Q592901703q"
 
 
 # 创建一个FTP实例并登录
-ftp = FTP(HOST)
-ftp.login(USER, PASS)
 
+ftp = FtpClient(HOST, USER, PASS)
 
 # 获取预设的欢迎消息
 # 220 (vsFTPd 2.2.2)
@@ -37,7 +34,7 @@ ftp.login(USER, PASS)
 
 # ftpClientUtils.listOneFile(ftp, "/lims/ArchiveReport/general")
 
-ftpClientUtils.downloadDir(ftp, "/ganlan", "/Users/tao/code")
+ftp.downloadDir("/ganlan", "/Users/tao/code")
 
 #print ftpClientUtils.nlist(ftp, "/lims/ArchiveReport/general")
 
