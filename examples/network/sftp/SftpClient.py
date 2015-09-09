@@ -42,7 +42,7 @@ import paramiko
 
 
 class SftpClient:
-    def __init__(self, host, port, user, passwd):
+    def __init__(self, host, user, passwd, port=22):
         self.transport = paramiko.Transport((host, port))
         self.transport.connect(username=user, password=passwd)
         self.sftp = paramiko.SFTPClient.from_transport(self.transport)
@@ -88,6 +88,15 @@ class SftpClient:
 
 
 
+    """ 删除远程主机上的文件或者目录 """
+    def delete(self, path):
+        if self.isDirectory(path):
+            for f in self.listDir(path):
+                self.delete(os.path.join(path, f))
+            self.sftp.rmdir(path) # rmdir不能直接删除非空目录
+        else:
+            self.sftp.remove(path)
+
 
 
     """ 判断 某个文件/目录 是否存在 """
@@ -113,6 +122,11 @@ class SftpClient:
             return False
 
 
+
+    """ 列出`path`中的文件名/目录名
+    这里只会返回basename，不会返回全路径名
+    `path`必须是目录
+    """
     def listDir(self, path):
         return self.sftp.listdir(path)
 
