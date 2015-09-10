@@ -110,6 +110,8 @@ class SftpClient:
             return True
 
 
+
+
     """ 判断是文件还是目录
     返回True表示是目录
     返回False表示是文件
@@ -120,6 +122,8 @@ class SftpClient:
             return True
         else:
             return False
+
+
 
 
 
