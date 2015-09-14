@@ -24,9 +24,14 @@ print localtime  # time.struct_time(tm_year=2015, tm_mon=7, tm_mday=27, tm_hour=
 
 """
 formatted time
+具体格式化的用法可以参考：[Python中time模块详解](http://www.qinxuye.me/article/details-about-time-module-in-python/)
 """
 localtime = time.asctime(time.localtime(time.time()))
 print localtime # Mon Jul 27 17:12:21 2015
+
+format = "%Y%m%d_%H%M%S"
+formatted_time = time.strftime(format, time.localtime())
+print "格式化的时间：" + formatted_time
 
 
 
