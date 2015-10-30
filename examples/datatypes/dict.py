@@ -38,3 +38,14 @@ print '---------------------'
 d1 = {'A': 'A00', "a" : 'a100', 100:888, 200:999}
 print d1 # {'A': 'A00', 'a': 'a100', 100: 888, 200: 999}
 
+
+# 为字典排序
+d = {}
+d['A'] = 3
+d['B'] = 100
+d['C'] = 50
+d['D'] = 0
+# 按照字典的value排序，而不是按照key排序
+import operator
+sortedD = sorted(d.iteritems(), key=operator.itemgetter(1), reverse=False)
+print sortedD
