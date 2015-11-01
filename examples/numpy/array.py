@@ -5,6 +5,8 @@ from numpy import array
 from numpy import tile
 from numpy import random
 from numpy import unique
+from numpy import zeros
+from numpy import empty
 
 
 a = array(['A', 'B', 'C'])
@@ -147,7 +149,28 @@ B = array([[100,200,300,400], ['A', 'B', 'C', 'D'], [1.1, 2.2, 3.3, 4.4], ["UU",
 print B[1,2]    # 输出 C
 print B[:, 2]   # 输出 ['300' 'C' '3.3' 'WW']
 print B[2, 1:2] # 输出 ['2.2']
+print "\n"
 
+
+
+###############################################
+# 用多个一维数组， 来构造一个二维数组
+###############################################
+print "-"*10 + " 取出array中的部分数据 " +  "-"*30
+A = zeros(10)
+B = zeros(10)
+for i in range(10):
+    A[i] = i
+for i in range(10):
+    B[i] = i*10
+print A
+print B
+
+C = zeros((2,10))
+C[0] = A
+C[1] = B
+print C
+print "\n"
 
 
 
