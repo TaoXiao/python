@@ -21,3 +21,4 @@ t3 = (1,)
 print t1
 print t2
 print t3
+print t2[0], t2[1]      # 取出一个tuple中的某个元素，按照位置取

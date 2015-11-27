@@ -11,7 +11,7 @@ d['city'] = 'NJ'
 print d['city']     # 输出NJ 
 #print d['province'] # 异常
 
-print '---------------------'
+print '\n---------测试某个key是否存在------------'
 
 # 测试某个key是否存在
 print d.get('province') # 输出 None
@@ -22,7 +22,7 @@ else:
 	print 'NO'
 
 
-print '---------------------'
+print '\n----------删除某个key-value pair-----------'
 
 # 删除某个key-value pair
 x = d.pop('city')
@@ -32,20 +32,27 @@ print d  # 输出{'gender': 'male', 'age': '30', 'name': 'tao'}
 # 查看字典中的kv的数量
 print len(d) # 输出3
 
-print '---------------------'
+print '\n--------字典允许存储不同类型的key-------------'
 
 # 字典允许存储不同类型的key
 d1 = {'A': 'A00', "a" : 'a100', 100:888, 200:999}
 print d1 # {'A': 'A00', 'a': 'a100', 100: 888, 200: 999}
 
 
+print '\n--------为字典排序-------------'
 # 为字典排序
 d = {}
 d['A'] = 3
 d['B'] = 100
 d['C'] = 50
 d['D'] = 0
+
+
+print '\n--------按照字典的value排序，而不是按照key排序-------------'
 # 按照字典的value排序，而不是按照key排序
 import operator
 sortedD = sorted(d.iteritems(), key=operator.itemgetter(1), reverse=False)
 print sortedD
+
+
+print '---------用dict来模拟tree------------'
