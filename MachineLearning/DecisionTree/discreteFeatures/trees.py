@@ -199,3 +199,22 @@ def generateDataSet():
 def test2():
     dataset, labels = generateDataSet()
     print json.dumps(createDecisionTree(dataset, labels), indent=4)
+
+
+
+############################################################
+# 用MLLib中的数据进行训练
+# 数据是一个CSV文件，来源于
+############################################################
+def readCSVDataSet(path):
+    import csv
+    dataset = []
+    with open(path, 'rb') as f:
+        reader = csv.reader(f)
+        for row in reader:
+            for field in row:
+                print field, type(field)
+            return
+
+
+readCSVDataSet("/Users/tao/Downloads/sample_tree_data.csv")

@@ -23,6 +23,5 @@ def createPlot():
     plt.show
 
 
-
-print "start"
-createPlot()
+from math import log
+print log(0.5, 2)
