@@ -1,9 +1,10 @@
 # -*- encoding: utf-8 -*-
 __author__ = 'tao'
 
-import sftpClient
+import SftpClient
 
-sftp = sftpClient.SftpClient("ecs5.njzd.com", "tao", "tao1234")
+'''
+sftp = SftpClient.SftpClient("ecs5.njzd.com", "tao", "tao1234")
 
 if sftp.exists("/home/tao/kafka/SimpleAPI-1.0-SNAPSHOT.jar"):
     print "Exists"
@@ -17,7 +18,7 @@ print sftp.isDirectory("/home/tao/")
 
 #print sftp.listDir("/home/tao/test/a.txt")
 sftp.delete("/home/tao/test")
+'''
 
-
-
+sftp = SftpClient.SftpClient("ecsx.njzd.com", "tao", "tao1234")
 

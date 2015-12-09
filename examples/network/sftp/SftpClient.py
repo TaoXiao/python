@@ -4,6 +4,8 @@ __author__ = 'tao'
 import errno
 import stat
 import os
+import socket
+import time
 
 '''
 使用SFTP的好处：
@@ -43,7 +45,16 @@ import paramiko
 
 class SftpClient:
     def __init__(self, host, user, passwd, port=22):
-        self.transport = paramiko.Transport((host, port))
+        Err_socket_gaierror = True  # 失败重试
+        while Err_socket_gaierror:
+            try:
+                self.transport = paramiko.Transport((host, port))
+                Err_socket_gaierror = False
+            except socket.gaierror as ex:
+                print "连接失败 ：%s ： 10秒后重试 ..." % ex
+                time.sleep(5)
+                Err_socket_gaierror = True
+
         self.transport.connect(username=user, password=passwd)
         self.sftp = paramiko.SFTPClient.from_transport(self.transport)
 
