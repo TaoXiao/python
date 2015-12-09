@@ -142,8 +142,11 @@ def example7():
 #    print "捕捉到了下层抛出的异常"
 
 
+example7()
 
+'''
 try:
     example7()
 except ZeroDivisionError:
     print "不能被0除"
+'''
