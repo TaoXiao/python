@@ -164,9 +164,11 @@ class SftpClient:
     def makeDirs(self, path):
         if self.exists(path):
             raise Exception("目录 [%s] 已存在" % path)
+        if path.endswith("/") or path.endswith("\\"):
+            raise Exception(u"目录路径[%s]不能以字符 \\ 或者 / 结尾" % path)
 
-        pDir  = os.path.abspath(os.path.join(path, os.pardir))  # C:\A  -->  C:\ , 或者 C:\A\B\C  -->  C:\A\B
-        ppDir = os.path.abspath(os.path.join(pDir, os.pardir))  # C:\   -->  C:\ , 或者 C:\A\B    -->  C:\A
+        pDir  = os.path.dirname(path)  # C:\A  -->  C:\ , 或者 C:\A\B\C  -->  C:\A\B
+        ppDir = os.path.dirname(pDir)  # C:\   -->  C:\ , 或者 C:\A\B    -->  C:\A
         if path == pDir :  # path类似于 C:\
             return
         elif pDir == ppDir : # path 类似于 C:\A

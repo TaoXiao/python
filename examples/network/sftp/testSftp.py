@@ -20,6 +20,7 @@ print sftp.isDirectory("/home/tao/")
 sftp.delete("/home/tao/test")
 '''
 
-
+import os
 sftp = SftpClient.SftpClient("ecs1.njzd.com", "root", "Root1234NJ")
-sftp.mkDir("/A/B/C/D/E/F/G/H/I/J/K")
+print os.path.dirname("/A/B")
+#print sftp.exists(os.path.dirname("/A/B/C/D/E"))
