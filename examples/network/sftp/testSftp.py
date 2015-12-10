@@ -20,5 +20,6 @@ print sftp.isDirectory("/home/tao/")
 sftp.delete("/home/tao/test")
 '''
 
-sftp = SftpClient.SftpClient("ecsx.njzd.com", "tao", "tao1234")
 
+sftp = SftpClient.SftpClient("ecs1.njzd.com", "root", "Root1234NJ")
+sftp.mkDir("/A/B/C/D/E/F/G/H/I/J/K")

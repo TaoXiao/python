@@ -146,6 +146,37 @@ class SftpClient:
         return self.sftp.listdir(path)
 
 
+
+
+    """ 创建一个目录 """
+    def mkDir(self, path):
+        if self.exists(path):
+            raise Exception("目录[%s]已存在" % path)
+        self.sftp.mkdir(path)
+
+
+
+
+    """ 创建多级目录
+        例如，如果参数path为 "/A/B/C/D"，但是目录"/A/B"并不存在,那么本函数将会创建目录 "/A/B/C/D"
+        或者，如果参数path问 "C:\A\B\C\D",但是目录"C:\A\B"并不存在，那么本函数也会创建完整的目录
+    """
+    def makeDirs(self, path):
+        if self.exists(path):
+            raise Exception("目录 [%s] 已存在" % path)
+
+        pDir  = os.path.abspath(os.path.join(path, os.pardir))  # C:\A  -->  C:\ , 或者 C:\A\B\C  -->  C:\A\B
+        ppDir = os.path.abspath(os.path.join(pDir, os.pardir))  # C:\   -->  C:\ , 或者 C:\A\B    -->  C:\A
+        if path == pDir :  # path类似于 C:\
+            return
+        elif pDir == ppDir : # path 类似于 C:\A
+            self.mkDir(path)
+        else : # path 类似于 C:\A\B
+            if not self.exists(pDir) : # 如果 C:\A不存在
+                self.makeDirs(pDir) # 则先创建 C:\A
+            self.mkDir(path)
+
+
     """ 使用完了必须关闭SFTP连接 """
     def close(self):
         self.sftp.close()
