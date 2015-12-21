@@ -4,6 +4,7 @@ __author__ = 'tao'
 from ftplib import FTP
 from ftplib import error_perm
 import os
+import sys
 
 """
 使用FTP来传数据必须要有FTP Server和FTP Client
@@ -29,27 +30,34 @@ class FtpClient:
     remoteFile必须是·文件名·
     localDir必须是·目录名·，且已存在
     """
-    def downloadFile(self, remoteFile, localDir):
+    def downloadFile(self, remoteFile, localDir, localFileName=None):
         if os.path.exists(localDir) and not os.path.isdir(localDir):
-            print "Error: Local path [" + localDir + "] is NOT directory."
+            sys.stderr.write("Local path [" + localDir + "] is NOT directory.")
             return
         if not os.path.exists(localDir):
-            print "Error: Local path [" + localDir + "] does NOT exist."
+            sys.stderr.write("Local path [" + localDir + "] does NOT exist.")
             return
         if not os.path.isdir(localDir):
-            print "Error: Local path [" + localDir + "] is NOT directory."
+            sys.stderr.write("Local path [" + localDir + "] is NOT directory.")
             return
         if not self.exists(remoteFile):
-            print "Error: Remote path [" + remoteFile + "] does NOT exist."
+            sys.stderr.write("Remote path [" + remoteFile + "] does NOT exist.")
             return
         if self.isDir(remoteFile):
-            print "Error: Remote path [" + remoteFile + "] is NOT regular file."
+            sys.stderr.write("Remote path [" + remoteFile + "] is NOT regular file.")
             return
 
-        localFile = os.path.join(localDir, os.path.basename(remoteFile))
-        localfile = open(localFile, 'wb')
-        self.ftp.retrbinary('RETR ' + remoteFile, localfile.write)
-        localfile.close()
+        if None == localFileName:
+            localFile = os.path.join(localDir, os.path.basename(remoteFile))
+        else:
+            localFile = os.path.join(localDir, localFileName)
+
+        with open(localFile, 'wb') as f:
+            try :
+                self.ftp.retrbinary('RETR ' + remoteFile, f.write)
+            except :
+                sys.stderr.write("\n[ERROR]: FTP文件路径为 %s, 本地目标目录为 %s \n" %(remoteFile, localDir))
+                raise
 
 
 

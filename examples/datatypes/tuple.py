@@ -22,3 +22,16 @@ print t1
 print t2
 print t3
 print t2[0], t2[1]      # 取出一个tuple中的某个元素，按照位置取
+
+
+print '-------------------'
+
+def test():
+    x = (1,2,3)
+    (a,b,c) = x
+    return a, b, c
+
+(z1, z2, z3) = test()
+print z1
+print z2
+print z3

@@ -53,5 +53,10 @@ print A
 print B
 
 
+print '\n--------遍历列表-----------'
+for u in A:
+    print u
+
+
 
 
